@@ -58,29 +58,39 @@ confuse `argparse` and cause a `SystemExit: 2` error.
 The function returns a compact summary dict (counts only) — not the full driver/vehicle lists —
 so Jupyter doesn't flood the output cell.
 
+All parameters default to `None` and fall back to the CONFIG block at the top of
+`process_vehicle_data.py`. In practice you only need to pass the data folder paths
+from Jupyter — `html_out`, `github_repo`, `github_skills_dir`, etc. are read from
+CONFIG automatically:
+
 ```python
 from process_vehicle_data import runVehicleDashboard
 
-# Folder mode (recommended)
+# Minimal call — all output/GitHub/maintenance settings come from CONFIG
+runVehicleDashboard(
+    stock_dir   = r"G:\My Drive\MuvMi\BaselineAnalysis\vehiclePrototype\vehicleMainLocation",
+    drivers_dir = r"G:\My Drive\MuvMi\BaselineAnalysis\vehiclePrototype\driverlocation",
+    shifts_dir  = r"G:\My Drive\MuvMi\BaselineAnalysis\DriverShiftRecord",
+)
+# Builds HTML, pushes index.html + README.md + skill/ to GitHub — all from CONFIG
+
+# Full explicit call (overrides CONFIG values)
 runVehicleDashboard(
     stock_dir        = r"G:\My Drive\MuvMi\BaselineAnalysis\vehiclePrototype\vehicleMainLocation",
     drivers_dir      = r"G:\My Drive\MuvMi\BaselineAnalysis\vehiclePrototype\driverlocation",
     shifts_dir       = r"G:\My Drive\MuvMi\BaselineAnalysis\DriverShiftRecord",
-    out              = "vehicle_data_multiday.json",
     maintenance_file = r"G:\My Drive\MuvMi\BaselineAnalysis\cannoyUsedVehicles.xlsx",
     github_repo      = r"C:\Users\Tawit\OneDrive\Documents\Claude\Projects\muvmi-vehicle-availability-dashboard",
     github_filename  = "index.html",
     github_readme    = r"C:\Users\...\vehicle-availability-dashboard_SKILL.md",
-)
-
-# Explicit file mode
-runVehicleDashboard(
-    stock   = "vehicleMainLocation_2026-04-04.csv",
-    drivers = "driverLocation_week13.xlsx",
-    shifts  = ["drivershifts_2026-04-03.xlsx", "drivershifts_2026-04-04.xlsx"],
-    out     = "vehicle_data_multiday.json",
+    github_skills_dir= r"C:\Users\...\Dashboard for Vehicle Management\vehicle-availability-skill",
 )
 ```
+
+CONFIG fallback order (inside `runVehicleDashboard()`):
+1. Explicit parameter passed in the call → wins
+2. `CONFIG` dict at top of script → fallback
+3. Built-in default (`'index.html'`, `14` days, etc.) → last resort
 
 **Auto-discovery rules:**
 | Argument | Picks |

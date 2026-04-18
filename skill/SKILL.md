@@ -77,20 +77,26 @@ Jupyter injects its own values into `sys.argv`, which causes `argparse` to error
 ```python
 from process_vehicle_data import runVehicleDashboard
 
+# Minimal call — html_out, github_*, maintenance_file all come from CONFIG automatically
+runVehicleDashboard(
+    stock_dir   = r"G:\My Drive\MuvMi\BaselineAnalysis\vehiclePrototype\vehicleMainLocation",
+    drivers_dir = r"G:\My Drive\MuvMi\BaselineAnalysis\vehiclePrototype\driverlocation",
+    shifts_dir  = r"G:\My Drive\MuvMi\BaselineAnalysis\DriverShiftRecord",
+)
+# Builds the HTML, pushes index.html + README.md + skill/ to GitHub — all from CONFIG
+
+# Full explicit call (any parameter overrides the corresponding CONFIG value)
 runVehicleDashboard(
     stock_dir        = r"G:\My Drive\MuvMi\BaselineAnalysis\vehiclePrototype\vehicleMainLocation",
     drivers_dir      = r"G:\My Drive\MuvMi\BaselineAnalysis\vehiclePrototype\driverlocation",
     shifts_dir       = r"G:\My Drive\MuvMi\BaselineAnalysis\DriverShiftRecord",
-    out              = "vehicle_data_multiday.json",
     maintenance_file = r"G:\My Drive\MuvMi\BaselineAnalysis\cannoyUsedVehicles.xlsx",
     github_repo      = r"C:\Users\Tawit\OneDrive\Documents\Claude\Projects\muvmi-vehicle-availability-dashboard",
     github_filename  = "index.html",
     github_readme    = r"C:\Users\...\vehicle-availability-dashboard_SKILL.md",
+    github_skills_dir= r"C:\Users\...\Dashboard for Vehicle Management\vehicle-availability-skill",
 )
 # Returns a compact summary dict (counts only) — does NOT dump driver/vehicle lists to Jupyter output
-# future_shifts_dir defaults to None → same folder as shifts_dir, split by date automatically
-# maintenance_file defaults to None → no vehicles excluded
-# github_repo defaults to None → dashboard not pushed to GitHub
 ```
 
 ### CONFIG block — key settings
